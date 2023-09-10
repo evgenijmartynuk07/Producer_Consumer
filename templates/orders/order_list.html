@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+<body>
+{% block content %}
+  <div class="nav justify-content-center m-5">
+   <div class="col-lg-4 p-lg-4 alert alert-warning">
+    <table class="table text-center" style="background-color: white">
+     <tr>
+      <th>Замовлення</th>
+      <th></th>
+     </tr>
+     {% for order in object_list %}
+      <tr>
+       <td>
+         {{ order.name }} {{ order.pk }}
+       </td>
+       <td>
+        <form method="post" action="{% url "orders:order-delete" order.pk %}">
+        {% csrf_token %}
+          <button type="submit" class="btn btn-link delete-button">
+            <span class="text-danger">🗑️</span>
+          </button>
+        </form>
+       </td>
+     </tr>
+  {% endfor %}
+  </table>
+  </div>
+  </div>
+{% endblock %}
+</body>

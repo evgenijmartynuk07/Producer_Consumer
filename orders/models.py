@@ -28,7 +28,11 @@ class Order(models.Model):
     )
     name = models.CharField(max_length=255)
     description = models.TextField()
-    employee = models.ForeignKey(User, on_delete=models.CASCADE)
+    employee = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="employee"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
@@ -36,8 +40,10 @@ class Order(models.Model):
         super().save(*args, **kwargs)
 
     @staticmethod
-    def generate_task_id():
-        return "".join(random.choices(string.ascii_uppercase + string.digits, k=6))
+    def generate_task_id() -> str:
+        return "".join(
+            random.choices(string.ascii_uppercase + string.digits, k=6)
+        )
 
     def __str__(self):
         return f"{self.pk}-{self.task_id}"

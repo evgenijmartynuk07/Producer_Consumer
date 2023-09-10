@@ -22,10 +22,14 @@ load_dotenv()
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY", "admin")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+API_TOKEN_TELEGRAM = os.environ.get("API_TOKEN_TELEGRAM")
+CHAT_ID = os.environ.get("CHAT_ID")
 
-ALLOWED_HOSTS = []
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
+
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'localhost']
+INTERNAL_IPS = ('127.0.0.1', '0.0.0.0', 'localhost',)
 
 
 # Application definition
@@ -37,7 +41,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "crispy_bootstrap4",
+    "debug_toolbar",
+    "crispy_forms",
     "orders",
+    "django_celery_beat",
+
+
 ]
 
 MIDDLEWARE = [
@@ -48,6 +58,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "producer_consumer.urls"
@@ -107,6 +118,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = "orders.User"
 
+CRISPY_TEMPLATE_PACK = "bootstrap4"
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -128,3 +141,17 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_BACKEND = "redis://redis:6379"
+CELERY_TIMEZONE = "UTC"
+
+
+CELERY_BEAT_SCHEDULE = {
+    "generated_new_order": {
+        "task": "orders.tasks.generated_new_order",
+        "schedule": 60.0,
+        "args": (),
+    },
+}

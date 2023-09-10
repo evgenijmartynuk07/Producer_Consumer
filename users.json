@@ -1,0 +1,35 @@
+[
+  {
+    "model": "orders.user",
+    "pk": 1,
+    "fields": {
+      "username": "user1",
+      "first_name": "Test1",
+      "password": "pbkdf2_sha256$600000$Txh8hGuOuFqoRCTXjH2Das$YvlkkFplRHmt9SXjSKVPEyqWmjviww8Kodye7XxFlFA=",
+      "email": "user1@example.com",
+      "position": "Розробник"
+    }
+  },
+  {
+    "model": "orders.user",
+    "pk": 2,
+    "fields": {
+      "username": "user2",
+      "first_name": "Test2",
+      "password": "pbkdf2_sha256$600000$YM8Xgt3zW3OFsVc69cNOGx$N2E3ssxP5nCdYDou14kb7JCRm6V6TROnV9i0TGO9K7o=",
+      "email": "user2@example.com",
+      "position": "Розробник"
+    }
+  },
+  {
+    "model": "orders.user",
+    "pk": 3,
+    "fields": {
+      "username": "user3",
+      "first_name": "Test3",
+      "password": "pbkdf2_sha256$600000$QXdKO6N3QB5rhdTBZF9H6T$fDokQwXbKQRIX32EiSk5j9l7VKWOJdx3LxErK7Xx0yE=",
+      "email": "user3@example.com",
+      "position": "Розробник"
+    }
+  }
+]

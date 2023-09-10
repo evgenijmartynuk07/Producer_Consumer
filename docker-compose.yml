@@ -1,0 +1,45 @@
+version: "3"
+services:
+    app:
+        build:
+            context: .
+        ports:
+            - "8000:8000"
+        volumes:
+            - ./:/app
+        command:
+          - sh
+          - -c
+          - |
+            python manage.py makemigrations
+            python manage.py migrate
+            sleep 3
+            python manage.py loaddata users.json
+            python manage.py runserver 0.0.0.0:8000 &
+            celery -A producer_consumer beat &
+            celery -A producer_consumer worker -l info
+        env_file:
+            - .env
+        depends_on:
+          - db
+          - redis
+        restart: on-failure
+
+    redis:
+      image: "redis:latest"
+      restart: always
+      command: redis-server
+      ports:
+        - "6378:6379"
+      volumes:
+        - ./tmp/redis_data:/var/lib/redis/data
+
+    db:
+      image: "postgres:latest"
+      restart: always
+      env_file:
+        - .env
+      ports:
+        - "5435:5432"
+      volumes:
+        - ./tmp/postgres_data:/var/lib/postgresql/data
