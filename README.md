@@ -1,5 +1,8 @@
 # Producer_Consumer
 
+1. Celery generates tasks for a random user in the database once a minute.
+2. When the user visits the page, they can see tasks that they need to delete.
+3. After deleting a task, the Telegram bot sends a message to the chat about the successful completion of the task.
 
 ## Installation
 
