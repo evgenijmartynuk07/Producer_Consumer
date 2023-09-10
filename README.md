@@ -14,6 +14,8 @@ The project needs to be launched directly in Docker, and all configurations will
 git clone https://github.com/evgenijmartynuk07/Producer_Consumer.git
 cd Producer_Consumer
 create .env based on .env.sample
+
+docker build -t backend .
 docker-compose up
 ```
 You can use next users:

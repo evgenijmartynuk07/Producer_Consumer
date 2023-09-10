@@ -1,29 +1,52 @@
 version: "3"
 services:
     app:
-        build:
-            context: .
+        image: backend
         ports:
             - "8000:8000"
         volumes:
             - ./:/app
-        command:
-          - sh
-          - -c
-          - |
-            python manage.py makemigrations
-            python manage.py migrate
-            sleep 3
-            python manage.py loaddata users.json
-            python manage.py runserver 0.0.0.0:8000 &
-            celery -A producer_consumer beat &
-            celery -A producer_consumer worker -l info
         env_file:
-            - .env
+          - .env
+        command: >
+          bash -c "python manage.py flush --noinput
+          && python manage.py migrate
+          && python manage.py loaddata users.json
+          && python manage.py runserver 0.0.0.0:8000"
         depends_on:
           - db
           - redis
         restart: on-failure
+        networks:
+          - net
+
+    celery:
+      image: backend
+      command: celery -A producer_consumer worker -l info
+      env_file:
+        - .env
+      volumes:
+        - ./:/app
+      depends_on:
+        - app
+        - db
+        - redis
+      networks:
+        - net
+
+    celery-beat:
+      image: backend
+      command: celery -A producer_consumer beat
+      env_file:
+        - .env
+      volumes:
+        - ./:/app
+      depends_on:
+        - app
+        - db
+        - redis
+      networks:
+        - net
 
     redis:
       image: "redis:latest"
@@ -33,13 +56,21 @@ services:
         - "6378:6379"
       volumes:
         - ./tmp/redis_data:/var/lib/redis/data
+      networks:
+        - net
 
     db:
       image: "postgres:latest"
       restart: always
+      ports:
+        - "5431:5432"
       env_file:
         - .env
-      ports:
-        - "5435:5432"
+
       volumes:
         - ./tmp/postgres_data:/var/lib/postgresql/data
+      networks:
+        - net
+
+networks:
+  net:
