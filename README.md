@@ -13,3 +13,16 @@ cd Producer_Consumer
 create .env based on .env.sample
 docker-compose up
 ```
+You can use next users:
+```shell
+username: user1
+password: user1
+```
+```shell
+username: user2
+password: user2
+```
+```shell
+username: user3
+password: user3
+```
